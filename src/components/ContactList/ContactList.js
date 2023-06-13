@@ -1,27 +1,30 @@
-import PropTypes from 'prop-types';
 import { DeleteButton, Item, ItemStyle, List } from "./ContactList.styled";
 
-export const ContactList = ({ users, onDelete }) => (
+import { arrContacts, delContact } from 'components/Redux/contactsSlice';
+import { filterValue } from 'components/Redux/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-  <List>
-    {users.map((user) => 
-      <Item key={user.id}>
-        <ItemStyle />
+export const ContactList = () => {
+  const filter = useSelector(filterValue);
+  const dispatch = useDispatch();
+  const filteredContacts = useSelector(arrContacts).filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  if (!filteredContacts?.length) {
+    return <div>Not found. Try something else</div>;
+  }
+  return (
+    <List>
+      {filteredContacts.map((contact) =>
+        <Item key={contact.id}>
+          <ItemStyle />
 
-        {user.name} : {user.number}
+          {contact.name} : {contact.number}
 
-        <DeleteButton type="button" onClick={() => onDelete(user.id)}>Delete</DeleteButton>
-      </Item>)}
-  </List>
-)
-
-ContactList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }).isRequired
-  ),
-  onDelete: PropTypes.func.isRequired,
-};
+          <DeleteButton type="button" onClick={() => {
+            dispatch(delContact(contact.id))
+          }}>Delete</DeleteButton>
+        </Item>)}
+    </List>
+  )
+}
