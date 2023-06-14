@@ -1,14 +1,11 @@
-import { useSelector } from 'react-redux';
-import { getAllContacts } from 'redux/contactsSlice';
-
-/* import { useEffect, useState } from "react";
-import { nanoid } from 'nanoid'; */
+import { useEffect, useState } from "react";
+import { nanoid } from 'nanoid';
 import { Filter } from "./Filter/Filter";
 import { ContactList } from "./ContactList/ContactList";
 import { ContactForm } from "./ContactForm/ContactForm";
 import { Layout } from "./Layout/Layout";
 
-/* export const App = (props) => {
+export const App = (props) => {
 
   const [contacts, setContacts] = useState(() => {
     const savedContacts = localStorage.getItem('contacts');
@@ -93,34 +90,4 @@ import { Layout } from "./Layout/Layout";
 
       </Layout>
     )
-  } */
-
-  export default function App() {
-  const allContacts = useSelector(getAllContacts);
-  return (
-    <Layout>
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#041934',
-          backgroundColor: '#c3f5bf',
-        }}
-      >
-        <h1>Phonebook</h1>
-        <ContactForm />
-        <h2>Contacts</h2>
-        <Filter />
-        {allContacts.contacts.length > 0 ? (
-          <ContactList />
-        ) : (
-          <p style={{ textAlign: 'center' }}>Don't have contacts...</p>
-          )}
-      </div>
-    </Layout>
-  );
-}
+  }
