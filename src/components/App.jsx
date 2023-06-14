@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { nanoid } from 'nanoid';
 import { Filter } from "./Filter/Filter";
 import { ContactList } from "./ContactList/ContactList";
 import { ContactForm } from "./ContactForm/ContactForm";
 import { Layout } from "./Layout/Layout";
+import { useDispatch } from "react-redux";
+import { addContact } from "./redux/actions";
 
 export const App = (props) => {
 
+  const dispatch = useDispatch();
+
   const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts');
+  const savedContacts = localStorage.getItem('contacts');
 
     if (savedContacts !== null) {
       return JSON.parse(savedContacts)
@@ -29,10 +32,7 @@ export const App = (props) => {
       alert(message);
     }
     else {
-      setContacts([...contacts, {
-          id: nanoid(), name: e.target.name.value, number: e.target.number.value
-        }]
-      );
+      dispatch(addContact(e.target.name.value, e.target.number.value));
     }
   }
 
@@ -40,17 +40,11 @@ export const App = (props) => {
     setFilter(e.currentTarget.value)
   }
 
-  const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
-  }
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
 
     return (
       <Layout>
@@ -81,10 +75,7 @@ export const App = (props) => {
           onChange={changeFilter}
         />
 
-        <ContactList
-          users={filteredContacts}
-          onDelete={deleteContact}
-        />
+        <ContactList/>
 
         </div>
 
